@@ -1,0 +1,17 @@
+/* @import '~antd/dist/antd.css'; */
+
+.App {
+  text-align: center;
+}
+
+.additem,.list-group,.search {
+  width: 400px;
+  margin: 20px auto;
+  padding: 0;
+}
+
+.list-group li{
+  list-style: none;
+  margin-top: 20px;
+  line-height: 30px;
+}
