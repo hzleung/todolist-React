@@ -3,6 +3,8 @@ import TodoList from './todolist'
 import AddItem from './addItem'
 import SearchList from './searchlist'
 import '../css/todoBox.css';
+import { Provider } from 'mobx-react'
+import store from '../store/index'
 
 enum todoState {
   runing,
@@ -26,7 +28,7 @@ interface ITodoBoxState {
 
 export default class TodoBox extends React.Component<ITodoBoxProps, ITodoBoxState> {
   state: ITodoBoxState = {
-    todoList:[
+    todoList: [
       {
         id: '1',
         task: "React",
@@ -51,7 +53,7 @@ export default class TodoBox extends React.Component<ITodoBoxProps, ITodoBoxStat
   }
 
   getItemId() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0,
         v = c == 'x' ? r : (r & 0x3 | 0x8)
       return v.toString(16)
@@ -59,16 +61,16 @@ export default class TodoBox extends React.Component<ITodoBoxProps, ITodoBoxStat
   }
 
   // TODO 检查空值 debouns
-  onAddTodoItem = (task: string) => {
-    let { todoList } = this.state 
-    const newItem: ITodoItem = {
-      id: this.getItemId(),
-      task,
-      status: 0
-    }
-    todoList.push(newItem)
-    this.setState({ todoList });
-  }
+  // onAddTodoItem = (task: string) => {
+  //   let { todoList } = this.state
+  //   const newItem: ITodoItem = {
+  //     id: this.getItemId(),
+  //     task,
+  //     status: 0
+  //   }
+  //   todoList.push(newItem)
+  //   this.setState({ todoList });
+  // }
 
   onTaskDelete = (taskId: string) => {
     const { todoList } = this.state;
@@ -90,7 +92,7 @@ export default class TodoBox extends React.Component<ITodoBoxProps, ITodoBoxStat
     this.setState({ todoList: todoList.filter(v => v.task.includes(val)) })
   }
   // updateItem
-  updateItem = ({value, id}: any) => {
+  updateItem = ({ value, id }: any) => {
     const { todoList } = this.state;
     const index = todoList.findIndex(v => v.id === id)
     if (index !== -1) {
@@ -103,9 +105,11 @@ export default class TodoBox extends React.Component<ITodoBoxProps, ITodoBoxStat
     const { todoList } = this.state;
     return (
       <div>
-        <SearchList getSearchList={this.onSearch}/>
-        <TodoList data={todoList} onDeleteItem={this.onTaskDelete} handleUpdateItem={this.updateItem}/>
-        <AddItem onSaveItem={this.onAddTodoItem} />
+        <Provider store={store}>
+          <SearchList getSearchList={this.onSearch} />
+          <TodoList data={todoList} onDeleteItem={this.onTaskDelete} handleUpdateItem={this.updateItem} />
+          <AddItem store={store}/>
+        </Provider>
       </div>
     )
   }
