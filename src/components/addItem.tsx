@@ -22,14 +22,16 @@ export default class AddItem extends React.Component {
   }
 
   handleRevoke = () => {
-    if(_store.actionStatus === 'addRunning'){
-      _store.revokeAdd(_store.id)
-    }else if(_store.actionStatus === 'deleteRunning') {
+    const currentValue = _store.actionList.pop()
+    const currentId = _store.actionId.pop()
+    if (currentValue === 'addRunning' + currentId) {
+      _store.revokeAdd(currentId)
+    } else if (currentValue === 'deleteRunning' + currentId) {
       _store.revokeDel(_store.currentIndex)
-    }else if(_store.actionStatus === 'updateRunning') {
-      const content = _store.content
-      const taskId = _store.taskId
-      _store.revokeUpdate({content, taskId})
+    } else if (currentValue === 'updateRunning' + currentId) {
+      const currentUpdateContent = _store.actionUpdateContent.pop()
+      const content = currentUpdateContent
+      _store.revokeUpdate({ content, currentId })
     }
   }
   render() {
@@ -37,7 +39,7 @@ export default class AddItem extends React.Component {
       <div className="additem">
         <Form>
           <label htmlFor="newItem"></label>
-          <Input id="newItem" type="text" placeholder="输入内容" style={{ width: 252,marginRight: 10 }} value={this.state.value} onChange={this.handleChange}></Input>
+          <Input id="newItem" type="text" placeholder="输入内容" style={{ width: 352, marginRight: 10 }} value={this.state.value} onChange={this.handleChange}></Input>
           <Button type="primary" className="full-right" onClick={this.onSaveItem} style={{ marginRight: 10 }}>保存</Button>
           <Button type="primary" className="full-right" onClick={this.handleRevoke}>撤销</Button>
         </Form>

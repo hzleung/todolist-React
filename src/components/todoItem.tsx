@@ -15,13 +15,17 @@ interface Iprops {
 interface ITodoItemState {
   content: string
   visible: boolean
+  checked: boolean
+  disabled: boolean
 }
 
 @inject('store') @observer
 export default class TodoItem extends React.Component<Iprops, ITodoItemState> {
   state: ITodoItemState = {
     content: '',
-    visible: false
+    visible: false,
+    checked: false,
+    disabled: false
   }
   // delete item
   onDeleteItem = () => {
@@ -56,17 +60,24 @@ export default class TodoItem extends React.Component<Iprops, ITodoItemState> {
       content: value
     })
   }
+  completedItem = () => {
+    this.setState({ 
+      checked: !this.state.checked,
+      disabled: !this.state.disabled
+     });
+  }
   render() {
     let task = this.props.task
     return (
       <li className="list-group-item">
         <Row>
           <Col span={12} style={{ textAlign: "left" }}>
-            <Checkbox /> {task}
+            <Checkbox checked={this.state.checked} /> {task}
           </Col>
           <Col span={12} style={{ textAlign: "right" }}>
-            <Button type="danger" className="pull-right" onClick={this.onDeleteItem} style={{ marginRight: 10 }}>删除</Button>
-            <Button type="primary" className="pull-right" onClick={this.updateItem}>修改</Button>
+            <Button type="danger" className="pull-right" onClick={this.onDeleteItem} style={{ marginRight: 10 }} disabled={this.state.disabled}>删除</Button>
+            <Button type="primary" className="pull-right" onClick={this.updateItem} style={{ marginRight: 10 }} disabled={this.state.disabled}>修改</Button>
+            <Button type="primary" className="pull-right" onClick={this.completedItem}>{!this.state.checked ? '完成' : '修改'}</Button>
             <Modal
               title="更新内容"
               visible={this.state.visible}
