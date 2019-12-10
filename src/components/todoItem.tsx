@@ -1,8 +1,8 @@
 import React from "react";
 import { inject, observer } from 'mobx-react'
 import _store from '../store';
-import { Row, Col, Checkbox, Button, Modal, Input, message } from 'antd';
-import { string } from "prop-types";
+import { Row, Col, Checkbox, Button, Modal, Input } from 'antd';
+// import { string } from "prop-types";
 const { TextArea } = Input;
 
 interface Iprops {

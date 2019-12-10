@@ -1,6 +1,6 @@
 import React from "react"
 import _store from '../store';
-import TodoList from './todolist'
+// import TodoList from './todolist'
 import { Input } from 'antd';
 const { Search } = Input;
 

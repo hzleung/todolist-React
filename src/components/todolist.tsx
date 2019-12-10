@@ -9,7 +9,7 @@ import { inject, observer } from 'mobx-react'
 export default class TodoList extends React.Component {
   renderList(data: any, keywords: string) {
     if (!data.length && keywords) {
-      return <div>没找到{keywords}</div>
+      return <div className="nofound">没找到关键字 "{keywords}" 哦！再看准点儿哈~</div>
     }
     return( <ul className="list-group">
     {

@@ -29,11 +29,15 @@ class AppStore {
   @observable id: string = ''
   @observable taskId: string = ''
   @observable content: string = ''
-  // @observable task: string = ''
-  // @observable status: number = 0
+  @observable task: string = ''
+  @observable status: number = 0
+  @observable actionStatus: string = ''
+  @observable currentIndex: number = 0
   @action addItem(task: string) {
     const id =  moment().format('HHmmss')
     this.id = id
+    this.actionStatus = "addRunning"
+    console.log("执行增加,赋值addRunning")
     if (!task) {
       alert("内容不能为空")
     } else {
@@ -46,13 +50,19 @@ class AppStore {
     }
   }
   @action deleteItem(taskId: any) {
-    // const index = this.todoList.findIndex(v => v.id === taskId)
-    // this.taskId = taskId
-    // this.task = this.todoList[index].task
-    // this.status = this.todoList[index].status
+    this.actionStatus = "deleteRunning"
+    console.log("执行删除,赋值deleteRunning")
+    const index = this.todoList.findIndex(v => v.id === taskId)
+    this.currentIndex = index
+    // console.log("当前删除的索引值为：" + this.currentIndex)
+    this.taskId = taskId
+    this.task = this.todoList[index].task
+    this.status = this.todoList[index].status
     this.todoList = this.todoList.filter(v => v.id !== taskId)
   }
   @action updateItem({content, taskId}: any) {
+    this.actionStatus = "updateRunning"
+    console.log("执行修改,赋值updateRunning")
     const index = this.todoList.findIndex(v => v.id === taskId)
     this.taskId = taskId
     this.content = this.todoList[index].task
@@ -68,22 +78,28 @@ class AppStore {
   @action setKeyword(keywords: string) {
     this.keywords = keywords
   }
+  @action revokeAdd(taskId: any) {
+    console.log("撤销刚刚新增的操作")
+    this.todoList = this.todoList.filter(v => v.id !== taskId)
+  }
   @action revokeUpdate({content, taskId}: any) {
+    console.log("撤销刚刚修改的操作")
     const index = this.todoList.findIndex(v => v.id === taskId)
       if (index !== -1) {
         this.todoList[index].task = content
       }
   }
-  @action revokeDel(taskId: any) {
-    console.log(this.taskId)
-  //   console.log(this.task)
-  //   console.log(this.status)
-  //   const newItem = {
-  //     id: this.taskId,
-  //     task: this.task,
-  //     status: this.status
-  //   }
-  //   this.todoList = [...this.todoList, newItem]
+  @action revokeDel(currentIndex: number) {
+    console.log("撤销刚刚删除的操作")
+    // console.log("传入的索引值为：" + currentIndex)
+    const newItem = {
+      id: this.taskId,
+      task: this.task,
+      status: this.status
+    }
+    // this.todoList = [...this.todoList, newItem]
+    this.todoList.splice(currentIndex, 0, newItem)
+    return this.todoList
   }
   @computed
   get getSearchList() {

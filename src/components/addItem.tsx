@@ -7,8 +7,7 @@ import _store from '../store';
 @inject('store') @observer
 export default class AddItem extends React.Component {
   readonly state = {
-    value: '',
-    val: ''
+    value: ''
   }
   handleChange = (e: any) => {
     this.setState({
@@ -18,17 +17,20 @@ export default class AddItem extends React.Component {
 
   onSaveItem = () => {
     const val = this.state.value
-    this.state.val = val
     _store.addItem(val)
     this.setState({ value: '' })
   }
 
   handleRevoke = () => {
-    _store.deleteItem(_store.id)
-    const content = _store.content
-    const taskId = _store.taskId
-    _store.revokeUpdate({content, taskId})
-    _store.revokeDel(taskId)
+    if(_store.actionStatus === 'addRunning'){
+      _store.revokeAdd(_store.id)
+    }else if(_store.actionStatus === 'deleteRunning') {
+      _store.revokeDel(_store.currentIndex)
+    }else if(_store.actionStatus === 'updateRunning') {
+      const content = _store.content
+      const taskId = _store.taskId
+      _store.revokeUpdate({content, taskId})
+    }
   }
   render() {
     return (
